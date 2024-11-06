@@ -3,6 +3,7 @@ import 'package:ecommerce_appui/screens/details_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ProductScreen extends StatelessWidget {
   const ProductScreen({super.key});
@@ -74,7 +75,7 @@ class ProductScreen extends StatelessWidget {
                         physics: const NeverScrollableScrollPhysics(),
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
-                          mainAxisExtent: 270,
+                          mainAxisExtent: 260,
                           crossAxisSpacing: 10.0,
                           crossAxisCount: 2,
                         ),
@@ -121,26 +122,26 @@ class ProductScreen extends StatelessWidget {
                                       children: [
                                         Text(
                                           product.name,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
+                                          style: GoogleFonts.poppins(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 14,
                                           ),
                                         ),
                                         const SizedBox(height: 4),
                                         Text(
                                           product.description,
-                                          style: const TextStyle(
-                                            fontSize: 11,
-                                            color: Colors.black54,
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 10,
+                                            color: Colors.black87,
                                           ),
                                           textAlign: TextAlign.center,
                                         ),
                                         const SizedBox(height: 8),
                                         Text(
                                           product.price,
-                                          style: const TextStyle(
+                                          style: GoogleFonts.poppins(
                                             fontWeight: FontWeight.bold,
-                                            fontSize: 20,
+                                            fontSize: 18,
                                             color: Colors.black,
                                           ),
                                         ),
@@ -150,7 +151,10 @@ class ProductScreen extends StatelessWidget {
                                   const Positioned(
                                     top: 8,
                                     right: 8,
-                                    child: Icon(CupertinoIcons.heart),
+                                    child: Icon(
+                                      CupertinoIcons.heart,
+                                      size: 25,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -191,7 +195,7 @@ class ProductScreen extends StatelessWidget {
                         physics: const NeverScrollableScrollPhysics(),
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
-                          mainAxisExtent: 270,
+                          mainAxisExtent: 260,
                           crossAxisSpacing: 10.0,
                           crossAxisCount: 2,
                         ),
@@ -229,26 +233,26 @@ class ProductScreen extends StatelessWidget {
                                     children: [
                                       Text(
                                         mobilesAccessories.name,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
+                                        style: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14,
                                         ),
                                       ),
                                       const SizedBox(height: 4),
                                       Text(
                                         mobilesAccessories.description,
-                                        style: const TextStyle(
-                                          fontSize: 11,
-                                          color: Colors.black54,
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 10,
+                                          color: Colors.black87,
                                         ),
                                         textAlign: TextAlign.center,
                                       ),
                                       const SizedBox(height: 8),
                                       Text(
                                         mobilesAccessories.price,
-                                        style: const TextStyle(
+                                        style: GoogleFonts.poppins(
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 20,
+                                          fontSize: 18,
                                           color: Colors.black,
                                         ),
                                       ),
@@ -258,7 +262,10 @@ class ProductScreen extends StatelessWidget {
                                 const Positioned(
                                   top: 8,
                                   right: 8,
-                                  child: Icon(CupertinoIcons.heart),
+                                  child: Icon(
+                                    CupertinoIcons.heart,
+                                    size: 25,
+                                  ),
                                 ),
                               ],
                             ),
