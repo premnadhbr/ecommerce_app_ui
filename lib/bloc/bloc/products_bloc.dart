@@ -1,53 +1,85 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:ecommerce_appui/model/product_model.dart';
 import 'package:meta/meta.dart';
+import 'package:http/http.dart' as http;
+
 part 'products_event.dart';
 part 'products_state.dart';
 
 class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
   ProductsBloc() : super(ProductsInitial()) {
     on<ProductsLoadedEvent>(_productsLoadedEvent);
+    on<ProductSelectedEvent>(_productSelectedEvent);
+    on<ProductUpdateButtonClicked>(_productUpdateButtonClicked);
   }
 
   FutureOr<void> _productsLoadedEvent(
-      ProductsLoadedEvent event, Emitter<ProductsState> emit) {
+      ProductsLoadedEvent event, Emitter<ProductsState> emit) async {
     try {
-      List<ProductModel> products = [
-        ProductModel(
-            productImage: "assets/images/sony.png",
-            name: "Sony WH-1000XM4",
-            description:
-                "Wireless Industry Leading Noise\nCanceling Overhead \nHeadphones",
-            productheight: 150,
-            price: "\$ 299.99"),
-        ProductModel(
-            productImage: "assets/images/beats2.png",
-            name: "Sony WH-1000XM4",
-            description:
-                "Wireless Industry Leading Noise\nCanceling Overhead \nHeadphones",
-            productheight: 100,
-            price: "\$ 299.99"),
-      ];
+      final apiUrl = "https://dummyjson.com/products";
+      final response = await http.get(Uri.parse(apiUrl));
 
-      final mobilesAccessories = [
-        ProductModel(
-            productImage: "assets/images/samsung.png",
-            name: "Galaxy S21 Ultra",
-            description:
-                "Wireless Industry Leading Noise\nCanceling Overhead \nHeadphones",
-            productheight: 100,
-            price: "\$ 599.99"),
-        ProductModel(
-            productImage: "assets/images/charger.png",
-            name: "Super Fast USB C",
-            description:
-                "Charger Kit compatible \nsamsung Note 10 20 plus / S21\n S21 Ultra",
-            productheight: 100,
-            price: "\$ 99.99"),
-      ];
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        print(data);
 
-      emit(ProductLoaded(products, mobilesAccessories));
-    } catch (e) {}
+        // Parse the list of products
+        List<Product> products = (data['products'] as List)
+            .map((productJson) => Product.fromJson(productJson))
+            .toList();
+
+        emit(ProductLoaded(products));
+      } else {
+        emit(ProductError(message: "Failed to load products"));
+      }
+    } catch (e) {
+      emit(ProductError(message: e.toString()));
+    }
+  }
+
+  FutureOr<void> _productSelectedEvent(
+      ProductSelectedEvent event, Emitter<ProductsState> emit) async {
+    try {
+      final apiUrl = "https://dummyjson.com/products/${event.id}";
+
+      final response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        print(data);
+
+        Product product = Product.fromJson(data);
+
+        emit(ProductDetails(product: product));
+      } else {
+        emit(ProductError(message: "Failed to load products"));
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  FutureOr<void> _productUpdateButtonClicked(
+      ProductUpdateButtonClicked event, Emitter<ProductsState> emit) async {
+    final apiUrl = 'https://dummyjson.com/products/${event.id}';
+    final response = await http.put(
+      Uri.parse(apiUrl),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'title': event.title,
+        'price': double.parse(event.price),
+        'description': event.details,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final updatedData = jsonDecode(response.body);
+      Product updatedProduct = Product.fromJson(updatedData);
+      print(updatedProduct.title);
+
+      emit(ProductUpdateDoneState());
+    } else {}
   }
 }

@@ -28,7 +28,7 @@ class ColoredContainer extends StatelessWidget {
                 )
               : null,
         ),
-        child: Image.asset(image),
+        child: Image.network(image),
       ),
     );
   }

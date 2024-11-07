@@ -1,16 +1,15 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:ecommerce_appui/bloc/bloc/products_bloc.dart';
+import 'package:ecommerce_appui/model/product_model.dart';
+import 'package:ecommerce_appui/screens/detailsedit_page.dart';
 import 'package:ecommerce_appui/widgets/custom_container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ecommerce_appui/model/product_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class DetailsScreen extends StatelessWidget {
-  final ProductModel product;
-  const DetailsScreen({
-    Key? key,
-    required this.product,
-  }) : super(key: key);
+  final Product product;
+  const DetailsScreen({Key? key, required this.product}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +20,7 @@ class DetailsScreen extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
           onPressed: () {
+            BlocProvider.of<ProductsBloc>(context).add(ProductsLoadedEvent());
             Navigator.pop(context);
           },
           icon: const Icon(
@@ -28,11 +28,22 @@ class DetailsScreen extends StatelessWidget {
             size: 35,
           ),
         ),
-        actions: const [
-          Padding(
+        actions: [
+          const Padding(
             padding: EdgeInsets.all(8.0),
             child: Icon(CupertinoIcons.heart),
           ),
+          IconButton(
+            onPressed: () {
+              
+              Navigator.push(context, MaterialPageRoute(
+                builder: (context) {
+                  return EditProductScreen(product: product);
+                },
+              ));
+            },
+            icon: const Icon(Icons.edit),
+          )
         ],
       ),
       body: SingleChildScrollView(
@@ -67,8 +78,8 @@ class DetailsScreen extends StatelessWidget {
                                 ),
                               ),
                               ClipOval(
-                                child: Image.asset(
-                                  product.productImage,
+                                child: Image.network(
+                                  product.thumbnail,
                                   height: 300,
                                   fit: BoxFit.cover,
                                 ),
@@ -81,35 +92,33 @@ class DetailsScreen extends StatelessWidget {
                               ColoredContainer(
                                 isSelected: false,
                                 color: Colors.greenAccent,
-                                image: product.productImage,
+                                image: product.images.first,
                               ),
-                              const SizedBox(
-                                  height: 10), // Small gap between items
+                              const SizedBox(height: 10),
                               ColoredContainer(
                                 isSelected: true,
                                 color: Colors.blueAccent,
-                                image: product.productImage,
+                                image: product.images.last,
                               ),
-                              const SizedBox(
-                                  height: 10), // Small gap between items
+                              const SizedBox(height: 10),
                               ColoredContainer(
                                 isSelected: false,
                                 color: Colors.pinkAccent,
-                                image: product.productImage,
+                                image: product.images.first,
                               ),
                             ],
                           ),
                         ],
                       ),
                     ),
-                    Text(product.price,
+                    Text("\$${product.price}",
                         style: GoogleFonts.poppins(
                           color: const Color.fromRGBO(39, 75, 191, 1.0),
                           fontWeight: FontWeight.bold,
                           fontSize: 25,
                         )),
                     const SizedBox(height: 15),
-                    Text(product.name,
+                    Text(product.title,
                         style: GoogleFonts.poppins(
                           fontWeight: FontWeight.bold,
                           fontSize: 28,
@@ -118,92 +127,20 @@ class DetailsScreen extends StatelessWidget {
                     Text("About the item",
                         style: GoogleFonts.aBeeZee(color: Colors.grey)),
                     const SizedBox(height: 15),
-                    Row(
-                      children: [
-                        Chip(
-                          elevation: 0,
-                          side: BorderSide.none,
-                          color: const WidgetStatePropertyAll(
-                              Color.fromRGBO(237, 238, 254, 1)),
-                          label: Text(
-                            "Full specification",
-                            style: GoogleFonts.aBeeZee(
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 20,
-                        ),
-                        Text(
-                          "Reviews",
-                          style: GoogleFonts.aBeeZee(
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 15),
                     Text(
-                      "Sony WH-1000XM4 Wireless Industry Leading Noise Canceling Overhead Headphones with Mic for Phone-Call and Alexa Voice Control, Black",
+                      product.description,
                       style: GoogleFonts.poppins(
                         color: Colors.black87,
                       ),
                     ),
                     const SizedBox(height: 15),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: Image.asset(
-                                "assets/images/map.jpg",
-                                height: 50,
-                                width: 50,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Aghmashenebeli Ave 75",
-                                  style: GoogleFonts.aBeeZee(
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                Text(
-                                  "1 item is in the way",
-                                  style: GoogleFonts.aBeeZee(
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        const Icon(
-                          Icons.arrow_forward_ios,
-                          size: 30,
-                        )
-                      ],
-                    ),
-                    const Divider(
-                      thickness: 0.35,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
+                    const Divider(thickness: 0.35),
+                    const SizedBox(height: 20),
                   ],
                 ),
               ),
             ),
-            const SizedBox(
-              height: 30,
-            ),
+            const SizedBox(height: 30),
             Center(
               child: Container(
                 height: 60,
@@ -219,9 +156,7 @@ class DetailsScreen extends StatelessWidget {
                       CupertinoIcons.shopping_cart,
                       color: Colors.white,
                     ),
-                    const SizedBox(
-                      width: 10,
-                    ),
+                    const SizedBox(width: 10),
                     Text("ADD TO CART",
                         style: GoogleFonts.poppins(
                           color: Colors.white,
@@ -231,9 +166,7 @@ class DetailsScreen extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(
-              height: 20,
-            ),
+            const SizedBox(height: 20),
           ],
         ),
       ),

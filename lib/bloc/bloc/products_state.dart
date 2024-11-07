@@ -6,13 +6,24 @@ sealed class ProductsState {}
 
 final class ProductsInitial extends ProductsState {}
 
+final class ProductError extends ProductsState {
+  final String message;
+
+  ProductError({required this.message});
+}
+
 class ProductLoaded extends ProductsState {
-  final List<ProductModel> products;
-  final List<ProductModel> mobilesAccessories;
+  final List<Product> products;
 
   ProductLoaded(
     this.products,
-    this.mobilesAccessories,
   );
 }
 
+final class ProductDetails extends ProductsState {
+  final Product product;
+
+  ProductDetails({required this.product});
+}
+
+final class ProductUpdateDoneState extends ProductsState{}
